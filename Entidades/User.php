@@ -23,12 +23,12 @@ class User {
                 ];
             }
         }
-        return $datos;
+        return http_response_code(400);
     }
 
-    public static function insert($identificacion, $nombre, $apellido, $tipo_identificacion, $profesion) {
+    public static function insert($identificacion, $usuario, $contra) {
         $db = new Connection();
-        $query = "INSERT INTO personas (identificacion, nombre, apellido, tipo_identificacion, profesion) VALUES('".$identificacion."', '".$nombre."', '".$apellido."', '".$tipo_identificacion."', '".$profesion."')";
+        $query = "INSERT INTO usuarios (id, user_name, user_password) VALUES('".$identificacion."', '".$usuario."', SHA('".$contra."'))";
         $db->query($query);
         if($db->affected_rows) {
             return TRUE;
@@ -36,9 +36,9 @@ class User {
         return FALSE;
     }
 
-    public static function update($identificacion, $nombre, $apellido, $tipo_identificacion, $profesion) {
+    public static function update($identificacion, $usuario, $contra) {
         $db = new Connection();
-        $update = "UPDATE personas SET nombre = '".$nombre."', apellido ='".$apellido."', tipo_identificacion ='".$tipo_identificacion."', profesion ='".$profesion."' WHERE identificacion ='".$identificacion."'";
+        $update = "UPDATE usuarios SET user_password = '".$user_password."' WHERE identificacion ='".$identificacion."' AND user_name='".$usuario."'";
 
         $db->query($update);
         if($db->affected_rows) {

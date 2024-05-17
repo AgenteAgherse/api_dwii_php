@@ -23,7 +23,7 @@ class Personas {
     public static function getWhere($identificacion) {
         $db = new Connection();
 
-        $where = "SELECT * FROM personas WHERE identificacion = ".$identificacion."";
+        $where = "SELECT * FROM personas WHERE identificacion = '".$identificacion."'";
 
         $resultado = $db->query($where);
         $datos = [];
