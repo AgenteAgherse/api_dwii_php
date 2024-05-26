@@ -27,10 +27,10 @@ class Compromiso {
         return $datos;
     }
 
-    public static function getWhere($idcompromiso) {
+    public static function getWhere($organizador) {
         $db = new Connection();
 
-        $where = "SELECT * FROM compromisos WHERE idcompromiso = ".$idcompromiso."";
+        $where = "SELECT * FROM compromisos WHERE organizador = ".$organizador." AND fecha_fin > CURDATE() ORDER BY fecha_inicio";
 
         $resultado = $db->query($where);
         $datos = [];
@@ -48,6 +48,43 @@ class Compromiso {
                     'lugar' => $row['lugar'],
                     'modalidad' => $row['modalidad'],
                     'capacidad' => $row['capacidad']
+                ];
+            }
+        }
+        return $datos;
+    }
+
+    public static function getOtherOnes($organizador) {
+        $db = new Connection();
+
+        $where = "
+        SELECT compromisos.*, CONCAT(personas.nombre, ' ', personas.apellido) AS nombre_organizador FROM compromisos 
+        JOIN personas ON personas.identificacion = compromisos.organizador
+        WHERE 
+                organizador != '".$organizador."' 
+            AND 
+                fecha_fin > CURDATE() 
+            AND
+                idcompromiso NOT IN (SELECT compromiso FROM participantes WHERE participante = '".$organizador."')
+            ORDER BY fecha_inicio ASC;";
+
+        $resultado = $db->query($where);
+        $datos = [];
+        if($resultado->num_rows) {
+            while($row = $resultado->fetch_assoc()) {
+                $datos[] = [
+                    'idcompromiso' => $row['idcompromiso'],
+                    'organizador' => $row['organizador'],
+                    'fecha_inicio' => $row['fecha_inicio'],
+                    'fecha_fin' => $row['fecha_fin'],
+                    'hora_inicio' => $row['hora_inicio'],
+                    'hora_fin' => $row['hora_fin'],
+                    'titulo' => $row['titulo'],
+                    'descripcion' => $row['descripcion'],
+                    'lugar' => $row['lugar'],
+                    'modalidad' => $row['modalidad'],
+                    'capacidad' => $row['capacidad'],
+                    'nombre_organizador' => $row['nombre_organizador']
                 ];
             }
         }

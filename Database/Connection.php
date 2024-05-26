@@ -6,5 +6,6 @@ class Connection extends Mysqli {
         $this->set_charset('utf8');
         $this->connect_error == NULL ? 'Conexión generada' : die('Error.');
     }
+
 }
 ?>

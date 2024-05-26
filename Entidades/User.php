@@ -1,5 +1,6 @@
 <?php
 require_once '../Database/Connection.php';
+require_once '../Database/Encryptation.php';
 class User {
 
     public static function findUser($user) {
@@ -16,14 +17,12 @@ class User {
         $resultado = $db->query($where);
         if($resultado->num_rows) {
             while($row = $resultado->fetch_assoc()) {
-                return [
-                    'user_name' => $row['user_name'],
-                    'id' => $row['id'],
-                    'user_password' => $row['user_password']
-                ];
+                // Generación de la JWT
+                $data = JWTdata::generateJWT($row['id']);
+                return $data;
             }
         }
-        return http_response_code(400);
+        return null;
     }
 
     public static function insert($identificacion, $usuario, $contra) {

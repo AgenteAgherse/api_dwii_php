@@ -26,10 +26,9 @@ class Personas {
         $where = "SELECT * FROM personas WHERE identificacion = '".$identificacion."'";
 
         $resultado = $db->query($where);
-        $datos = [];
         if($resultado->num_rows) {
             while($row = $resultado->fetch_assoc()) {
-                $datos[] = [
+                return [
                     'identificacion' => $row['identificacion'],
                     'nombre' => $row['nombre'],
                     'apellido' => $row['apellido'],

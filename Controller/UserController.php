@@ -21,7 +21,14 @@
             $user = isset($_GET['user'])? $_GET['user']: NULL;
             $pass = isset($_GET['password'])? $_GET['password']: NULL;
             if ($user != NULL && $pass != NULL) {
-                echo json_encode(User::getWhere($user, $pass));
+                $jwtToken = User::getWhere($user, $pass);
+                if ($jwtToken == null) {
+                    http_response_code(401);
+                    exit();
+                }
+                /* echo json_encode(['token' => 'Bearer '.$jwtToken]); */
+                echo json_encode($jwtToken);
+                http_response_code(200);
             }
             else {
                 http_response_code(400);
@@ -38,13 +45,8 @@
                     http_response_code(200);
                 } else { http_response_code(400); }
             break;
-
-        case 'DELETE':
-            if(User::delete($datos->identificacion)) { http_response_code(200); }
-            else { http_response_code(400); }
-            break;
         default:
-            http_response_code(405);
+            http_response_code(500);
             break;
     }
 

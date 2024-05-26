@@ -1,5 +1,6 @@
 <?php
     require_once '../Entidades/Participante.php';
+    require_once '../Database/Encryptation.php';
     $datos = json_decode(file_get_contents('php://input'));
     // Set CORS headers
     header('Access-Control-Allow-Origin: *');
@@ -11,6 +12,24 @@
         http_response_code(200);
         exit();
     }
+
+    $headers = apache_request_headers();
+    if (isset($headers['Authorization'])) {
+        $token = str_replace('Bearer ', '', $headers['Authorization']);
+        $userData = JWTdata::validateJWT($token);
+        if ($userData) {
+            $id = $userData['sub'];
+        } else {
+            http_response_code(401);
+            echo json_encode(['error' => 'Invalid token']);
+            exit();
+        }
+    }
+    else {
+        http_response_code(401);
+        exit();
+    }
+    
     switch ($_SERVER['REQUEST_METHOD']) {
 
         case 'GET':
@@ -25,7 +44,7 @@
         case 'POST':
             if(Participante::insert(
             $datos->compromiso,
-            $datos->participante)) {
+            $id)) {
                 http_response_code(200);
             }
             else {
