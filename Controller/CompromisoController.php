@@ -38,6 +38,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
             http_response_code(200);
             exit();
         }
+        if (isset($_GET['specific'])) {
+            echo json_encode(Compromiso::getByCompromiso($_GET['specific']));
+            http_response_code(200);
+            exit();
+        }
 
         echo json_encode(Compromiso::getWhere($id)); 
         http_response_code(200);

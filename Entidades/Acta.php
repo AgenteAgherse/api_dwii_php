@@ -21,10 +21,10 @@ class Acta {
         return $datos;
     }
 
-    public static function getWhere($idacta) {
+    public static function getWhere($pertenece) {
         $db = new Connection();
 
-        $where = "SELECT * FROM acta WHERE idacta = ".$idacta."";
+        $where = "SELECT * FROM acta WHERE pertenece = ".$pertenece."";
 
         $resultado = $db->query($where);
         $datos = [];

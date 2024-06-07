@@ -1,5 +1,6 @@
 <?php
     require_once '../Entidades/Personas.php';
+    require_once '../Entidades/Compromiso.php';
     require_once '../Database/Encryptation.php';
     // Set CORS headers
     header('Access-Control-Allow-Origin: *');
@@ -36,6 +37,15 @@
     switch ($_SERVER['REQUEST_METHOD']) {
 
         case 'GET':
+            // Inscripción de los eventos de las personas
+            if (isset($_GET['inscrito'])) {
+                // Inscrito va a ser un número.
+                echo json_encode(Compromiso::compromisosInscritos($id));
+                http_response_code(200);
+                exit();
+            }
+
+
             echo json_encode(Personas::getWhere($id)); 
             break;
 

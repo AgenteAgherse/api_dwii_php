@@ -33,8 +33,20 @@
     switch ($_SERVER['REQUEST_METHOD']) {
 
         case 'GET':
-            if($datos != NULL) { 
-                echo json_encode(Participante::getWhere($datos->idparticipante)); 
+            if(isset($_GET['eliminar_compromiso'])) {
+                if (isset($_GET['participante'])) {
+                    if(Participante::delete($_GET['participante'], $_GET['compromiso'])) { http_response_code(200); }
+                    else { http_response_code(400); }
+                    break;
+                }
+                else {
+                    if(Participante::delete($id, $_GET['compromiso'])) { http_response_code(200); }
+                    else { http_response_code(400); }
+                    break;
+                }
+            }
+            if(isset($_GET['compromiso'])) { 
+                echo json_encode(Participante::getWhere($_GET['compromiso'])); 
             }
             else { 
                 echo json_encode(Participante::getAll()); 
@@ -54,11 +66,6 @@
 
         case 'PUT':
                 http_response_code(404);
-            break;
-
-        case 'DELETE':
-            if(Participante::delete($datos->idparticipante)) { http_response_code(200); }
-            else { http_response_code(400); }
             break;
         
         default:

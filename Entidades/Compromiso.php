@@ -1,6 +1,32 @@
 <?php
 require_once '../Database/Connection.php';
 class Compromiso {
+
+    public static function getByCompromiso($id) {
+        $select = "SELECT * FROM compromisos WHERE idcompromiso = $id";
+        $db = new Connection();
+        $results = $db->query($select);
+        if($results->num_rows) {
+            while($row = $results->fetch_assoc()) {
+                return [
+                    'idcompromiso' => $row['idcompromiso'],
+                    'organizador' => $row['organizador'],
+                    'fecha_inicio' => $row['fecha_inicio'],
+                    'fecha_fin' => $row['fecha_fin'],
+                    'hora_inicio' => $row['hora_inicio'],
+                    'hora_fin' => $row['hora_fin'],
+                    'titulo' => $row['titulo'],
+                    'descripcion' => $row['descripcion'],
+                    'lugar' => $row['lugar'],
+                    'modalidad' => $row['modalidad'],
+                    'capacidad' => $row['capacidad']
+                    
+                ];
+            }
+        }
+        return $datos;
+    }
+
     public static function getAll() {
         $select = "SELECT * FROM compromisos";
         $db = new Connection();
@@ -122,6 +148,33 @@ class Compromiso {
             return TRUE;
         }
         return FALSE;
+    }
+
+    public static function compromisosInscritos($participante) {
+        $db = new Connection();
+
+        $where = "SELECT * FROM compromisos WHERE idcompromiso IN (SELECT compromiso FROM participantes WHERE participante = $participante) AND fecha_fin > CURDATE()";
+
+        $resultado = $db->query($where);
+        $datos = [];
+        if($resultado->num_rows) {
+            while($row = $resultado->fetch_assoc()) {
+                $datos[] = [
+                    'idcompromiso' => $row['idcompromiso'],
+                    'organizador' => $row['organizador'],
+                    'fecha_inicio' => $row['fecha_inicio'],
+                    'fecha_fin' => $row['fecha_fin'],
+                    'hora_inicio' => $row['hora_inicio'],
+                    'hora_fin' => $row['hora_fin'],
+                    'titulo' => $row['titulo'],
+                    'descripcion' => $row['descripcion'],
+                    'lugar' => $row['lugar'],
+                    'modalidad' => $row['modalidad'],
+                    'capacidad' => $row['capacidad']
+                ];
+            }
+        }
+        return $datos;
     }
 
 }

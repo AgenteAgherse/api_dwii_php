@@ -1,6 +1,7 @@
 <?php
 require_once '../Database/Connection.php';
 class Participante {
+
     public static function getAll() {
         $select = "SELECT * FROM participantes";
         $db = new Connection();
@@ -18,18 +19,17 @@ class Participante {
         return $datos;
     }
 
-    public static function getWhere($idparticipante) {
+    public static function getWhere($compromiso) {
         $db = new Connection();
 
-        $where = "SELECT * FROM participantes WHERE idparticipante = ".$idparticipante."";
+        $where = "SELECT identificacion, CONCAT(nombre, ' ', apellido) AS participante FROM personas WHERE identificacion IN (SELECT participante FROM participantes WHERE compromiso = $compromiso)";
 
         $resultado = $db->query($where);
         $datos = [];
         if($resultado->num_rows) {
             while($row = $resultado->fetch_assoc()) {
                 $datos[] = [
-                    'idparticipante' => $row['idparticipante'],
-                    'compromiso' => $row['compromiso'],
+                    'identificacion' => $row['identificacion'],
                     'participante' => $row['participante']
                 ];
             }
@@ -47,9 +47,9 @@ class Participante {
         return FALSE;
     }
 
-    public static function delete($id) {
+    public static function delete($id, $compromiso) {
         $db = new Connection();
-        $query = "DELETE FROM participantes WHERE idparticipante=".$id;
+        $query = "DELETE FROM participantes WHERE participante=$id AND compromiso=$compromiso";
         $db->query($query);
         if($db->affected_rows) {
             return TRUE;

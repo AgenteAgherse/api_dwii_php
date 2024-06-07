@@ -3,10 +3,17 @@
     require_once '../Database/Encryptation.php';
     $datos = json_decode(file_get_contents('php://input'));
 
+
     // Set CORS headers
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+        http_response_code(200);
+        exit();
+    }
+
     $datos = json_decode(file_get_contents('php://input'));
  
     $headers = apache_request_headers();
@@ -15,7 +22,6 @@
         $userData = JWTdata::validateJWT($token);
         if ($userData) {
             $id = $userData['sub'];
-            echo $id;
         } else {
             http_response_code(401);
             echo json_encode(['error' => 'Invalid token']);
@@ -26,17 +32,12 @@
         http_response_code(401);
         exit();
     }
-
-    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-        http_response_code(200);
-        exit();
-    }
     
     switch ($_SERVER['REQUEST_METHOD']) {
 
         case 'GET':
-            if($datos != NULL) { 
-                echo json_encode(Acta::getWhere($datos->idacta)); 
+            if(isset($_GET['compromiso'])) { 
+                echo json_encode(Acta::getWhere($_GET['compromiso'])); 
             }
             else { 
                 echo json_encode(Acta::getAll()); 
