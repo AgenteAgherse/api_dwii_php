@@ -14,7 +14,80 @@ class Acta {
                     'fecha' => $row['fecha'],
                     'hora' => $row['hora'],
                     'lugar_emision' => $row['lugar_emision'],
-                    'descripcion' => $row['descripcion']
+                    'descripcion' => $row['descripcion'],
+                    'titulo' => $row['titulo'],
+                ];
+            }
+        }
+        return $datos;
+    }
+
+    public static function buscarActa($persona, $acta) {
+        $db = new Connection();
+        $sql = "SELECT acta.*, compromisos.titulo AS compromiso FROM acta  JOIN compromisos ON pertenece = idcompromiso WHERE organizador = $persona AND idacta = $acta";
+        $resultado = $db->query($sql);
+        $datos = [];
+        if($resultado->num_rows) {
+            while($row = $resultado->fetch_assoc()) {
+                $datos[] = [
+                    'idacta' => $row['idacta'],
+                    'pertenece' => $row['pertenece'],
+                    'fecha' => $row['fecha'],
+                    'hora' => $row['hora'],
+                    'lugar_emision' => $row['lugar_emision'],
+                    'descripcion' => $row['descripcion'],
+                    'titulo' => $row['titulo'],
+                    'compromiso' => $row['compromiso'],
+                ];
+            }
+        }
+        return $datos;
+    }
+
+    public static function obtenerActasHechas($persona) {
+        $db = new Connection();
+        $where = "SELECT acta.*, compromisos.titulo AS compromiso FROM acta 
+                    JOIN compromisos ON compromisos.idcompromiso = pertenece
+                    WHERE organizador = $persona";
+        $resultado = $db->query($where);
+        $datos = [];
+        if($resultado->num_rows) {
+            while($row = $resultado->fetch_assoc()) {
+                $datos[] = [
+                    'idacta' => $row['idacta'],
+                    'pertenece' => $row['pertenece'],
+                    'fecha' => $row['fecha'],
+                    'hora' => $row['hora'],
+                    'lugar_emision' => $row['lugar_emision'],
+                    'descripcion' => $row['descripcion'],
+                    'titulo' => $row['titulo'],
+                    'compromiso' => $row['compromiso'],
+                ];
+            }
+        }
+        return $datos;
+
+    }
+
+    public static function buscarPorTitulo($persona, $titulo) {
+        $db = new Connection();
+        $where = "SELECT acta.*, compromisos.titulo AS compromiso FROM acta 
+                    JOIN compromisos ON pertenece = idcompromiso
+                    WHERE organizador = $persona
+                    AND acta.titulo LIKE '%$titulo%'";
+        $resultado = $db->query($where);
+        $datos = [];
+        if($resultado->num_rows) {
+            while($row = $resultado->fetch_assoc()) {
+                $datos[] = [
+                    'idacta' => $row['idacta'],
+                    'pertenece' => $row['pertenece'],
+                    'fecha' => $row['fecha'],
+                    'hora' => $row['hora'],
+                    'lugar_emision' => $row['lugar_emision'],
+                    'descripcion' => $row['descripcion'],
+                    'titulo' => $row['titulo'],
+                    'compromiso' => $row['compromiso'],
                 ];
             }
         }
@@ -36,7 +109,8 @@ class Acta {
                     'fecha' => $row['fecha'],
                     'hora' => $row['hora'],
                     'lugar_emision' => $row['lugar_emision'],
-                    'descripcion' => $row['descripcion']
+                    'descripcion' => $row['descripcion'],
+                    'titulo' => $row['titulo'],
                 ];
             }
         }

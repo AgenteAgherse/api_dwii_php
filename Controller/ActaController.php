@@ -39,6 +39,17 @@
             if(isset($_GET['compromiso'])) { 
                 echo json_encode(Acta::getWhere($_GET['compromiso'])); 
             }
+            else if(isset($_GET['actas_hechas'])) {
+                echo json_encode(Acta::obtenerActasHechas($id));
+            }
+            else if(isset($_GET['buscar_acta'])) {
+                $acta = $_GET['buscar_acta'];
+                echo json_encode(Acta::buscarActa($id, $acta));
+            }
+            else if(isset($_GET['buscar_titulo'])) {
+                $titulo = $_GET['buscar_titulo'];
+                echo json_encode(Acta::buscarPorTitulo($id, $titulo));
+            }
             else { 
                 echo json_encode(Acta::getAll()); 
             }
