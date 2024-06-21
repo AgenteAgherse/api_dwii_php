@@ -24,7 +24,6 @@ class Compromiso {
                 ];
             }
         }
-        return $datos;
     }
 
     public static function getAll() {
@@ -128,7 +127,7 @@ class Compromiso {
         return FALSE;
     }
 
-    public static function update($idcompromiso, $organizador, $fecha_inicio, $fecha_fin, $hora_inicio, $hora_fin, $titulo, $descripcion, $lugar, $modalidad, $capcidad) {
+    public static function update($idcompromiso, $organizador, $fecha_inicio, $fecha_fin, $hora_inicio, $hora_fin, $titulo, $descripcion, $lugar, $modalidad, $capacidad) {
         $db = new Connection();
         $update = "UPDATE compromiso 
         SET organizador = '".$organizador."', fecha_inicio ='".$fecha_inicio."', fecha_fin ='".$fecha_fin."', hora_inicio ='".$hora_inicio."', hora_fin='".$hora_fin."', titulo='".$titulo."', descripcion='".$descripcion."', lugar='".$lugar."', modalidad='".$modalidad."', capacidad='".$capacidad."' WHERE idcompromiso=.$idcompromiso.";
