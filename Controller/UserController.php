@@ -26,7 +26,6 @@
                     http_response_code(401);
                     exit();
                 }
-                /* echo json_encode(['token' => 'Bearer '.$jwtToken]); */
                 echo json_encode($jwtToken);
                 http_response_code(200);
             }
@@ -35,16 +34,30 @@
             }
             break;
         case 'POST':
+            
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            // Asegurarse de que las variables están configuradas
+            if (isset($input['identificacion'], $input['usuario'], $input['nueva_contra'])) {
+                $identificacion = $input['identificacion'];
+                $usuario = $input['usuario'];
+                $contra = $input['nueva_contra'];
+
+                if (User::update($identificacion, $usuario, $contra)) {
+                    http_response_code(200);
+                    exit();
+                }
+
+                http_response_code(400);
+                exit();
+            }
+            
+
             if(User::insert($datos->identificacion, $datos->user, $datos->password)) {
                 http_response_code(200);
             } else { http_response_code(400); }
             break;
 
-        case 'PUT':
-                if(User::update($datos->identificacion, $datos->nombre, $datos->apellido, $datos->tipo_identificacion, $datos->profesion)) {
-                    http_response_code(200);
-                } else { http_response_code(400); }
-            break;
         default:
             http_response_code(500);
             break;

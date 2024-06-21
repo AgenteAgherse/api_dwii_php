@@ -94,6 +94,29 @@ class Acta {
         return $datos;
     }
 
+    public static function getById($id) {
+        $db = new Connection();
+
+        $where = "SELECT * FROM acta WHERE idacta = $id";
+
+        $resultado = $db->query($where);
+        $datos = [];
+        if($resultado->num_rows) {
+            while($row = $resultado->fetch_assoc()) {
+                $datos[] = [
+                    'idacta' => $row['idacta'],
+                    'pertenece' => $row['pertenece'],
+                    'fecha' => $row['fecha'],
+                    'hora' => $row['hora'],
+                    'lugar_emision' => $row['lugar_emision'],
+                    'descripcion' => $row['descripcion'],
+                    'titulo' => $row['titulo'],
+                ];
+            }
+        }
+        return $datos;
+    }
+
     public static function getWhere($pertenece) {
         $db = new Connection();
 
@@ -117,10 +140,10 @@ class Acta {
         return $datos;
     }
 
-    public static function insert($pertenece, $fecha, $hora, $lugar_emision, $descripcion) {
+    public static function insert($pertenece, $titulo, $fecha, $hora, $lugar_emision, $descripcion) {
         $db = new Connection();
-        $query = "INSERT INTO acta (pertenece, fecha, hora, lugar_emision, descripcion) VALUES
-        (".$pertenece.", '".$fecha."', '".$hora."', '".$lugar_emision."','".$descripcion."')";
+        $query = "INSERT INTO acta (pertenece, titulo, fecha, hora, lugar_emision, descripcion) VALUES ($pertenece, '$titulo', '$fecha', '$hora', '$lugar_emision','$descripcion')";
+
         $db->query($query);
         if($db->affected_rows) {
             return TRUE;

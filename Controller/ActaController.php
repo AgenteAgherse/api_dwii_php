@@ -33,6 +33,7 @@
         exit();
     }
     
+
     switch ($_SERVER['REQUEST_METHOD']) {
 
         case 'GET':
@@ -58,6 +59,7 @@
         case 'POST':
             if(Acta::insert(
             $datos->pertenece, 
+            $datos->titulo,
             $datos->fecha, 
             $datos->hora, 
             $datos->lugar_emision, 
@@ -78,15 +80,6 @@
                 $datos->descripcion)) {
                     http_response_code(200);
                 } else { http_response_code(400); }
-            break;
-
-        case 'DELETE':
-            if(Acta::delete($datos->idacta)) { http_response_code(200); }
-            else { http_response_code(400); }
-            break;
-        
-        default:
-            http_response_code(405);
             break;
     }
 ?>

@@ -37,8 +37,7 @@ class User {
 
     public static function update($identificacion, $usuario, $contra) {
         $db = new Connection();
-        $update = "UPDATE usuarios SET user_password = '".$user_password."' WHERE identificacion ='".$identificacion."' AND user_name='".$usuario."'";
-
+        $update = "UPDATE usuarios SET user_password = SHA('$contra') WHERE user_name = '$usuario' AND id = '$identificacion'";
         $db->query($update);
         if($db->affected_rows) {
             return TRUE;
